@@ -6,14 +6,27 @@ import Link from "@/Pages/Layouts/Components/Link";
 import Card from "@/Pages/Layouts/Components/Card";
 import Heading from "@/Pages/Layouts/Components/Heading";
 import Form from "@/Pages/Layouts/Components/Form";
-import AuthLayout from "@/Pages/Layouts/AuthLayout";
+
+import { dummyUser } from "@/Data/Dummy";
 
 const Login = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    if (email === dummyUser.email && password === dummyUser.password) {
+      localStorage.setItem("user", JSON.stringify(dummyUser));
+      window.location.href = "/admin";
+    } else {
+      alert("Email atau password salah!");
+    }
+  };
+
   return (
-    <AuthLayout>
-      <Card>
+      <Card className="max-w-md">
         <Heading as="h2">Login</Heading>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input type="email" name="email" placeholder="Masukkan email" required />
@@ -35,7 +48,6 @@ const Login = () => {
           Belum punya akun? <Link href="#">Daftar</Link>
         </p>
       </Card>
-    </AuthLayout>
   );
 };
 
