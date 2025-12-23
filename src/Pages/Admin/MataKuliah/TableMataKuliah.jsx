@@ -109,25 +109,25 @@ const TableMataKuliah = ({
                       {mk.sks} SKS
                     </span>
                   </td>
-                  <td className="py-2 px-4 text-center space-x-2">
+                    <td className="py-2 px-4 text-center space-x-2">
                     {onDetail && (
-                      <Button size="sm" onClick={() => onDetail(mk.id)}>
+                        <Button size="sm" onClick={() => onDetail(mk.id)}>
                         Detail
-                      </Button>
+                        </Button>
                     )}
 
-                    {onEdit && user?.permission?.includes("mata-kuliah.update") && (
-                      <Button size="sm" variant="warning" onClick={() => onEdit(mk)}>
+                    {onEdit && (
+                        <Button size="sm" variant="warning" onClick={() => onEdit(mk)}>
                         Edit
-                      </Button>
+                        </Button>
                     )}
 
-                    {onDelete && user?.permission?.includes("mata-kuliah.delete") && (
-                      <Button size="sm" variant="danger" onClick={() => onDelete(mk.id)}>
+                    {onDelete && (
+                        <Button size="sm" variant="danger" onClick={() => onDelete(mk.id)}>
                         Hapus
-                      </Button>
+                        </Button>
                     )}
-                  </td>
+                    </td>
                 </tr>
               );
             })

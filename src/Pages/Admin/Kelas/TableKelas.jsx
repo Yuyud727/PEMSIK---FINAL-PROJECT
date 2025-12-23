@@ -133,33 +133,25 @@ const TableKelas = ({
                       {getMahasiswaCount(kelas.mahasiswa_id)} Mahasiswa
                     </span>
                   </td>
-                  <td className="py-2 px-4 text-center space-x-2">
+                    <td className="py-2 px-4 text-center space-x-2">
                     {onDetail && (
-                      <Button size="sm" onClick={() => onDetail(kelas.id)}>
+                        <Button size="sm" onClick={() => onDetail(kelas.id)}>
                         Detail
-                      </Button>
+                        </Button>
                     )}
 
-                    {onEdit && user?.permission?.includes("kelas.update") && (
-                      <Button
-                        size="sm"
-                        variant="warning"
-                        onClick={() => onEdit(kelas)}
-                      >
+                    {onEdit && (
+                        <Button size="sm" variant="warning" onClick={() => onEdit(kelas)}>
                         Edit
-                      </Button>
+                        </Button>
                     )}
 
-                    {onDelete && user?.permission?.includes("kelas.delete") && (
-                      <Button
-                        size="sm"
-                        variant="danger"
-                        onClick={() => onDelete(kelas.id)}
-                      >
+                    {onDelete && (
+                        <Button size="sm" variant="danger" onClick={() => onDelete(kelas.id)}>
                         Hapus
-                      </Button>
+                        </Button>
                     )}
-                  </td>
+                    </td>
                 </tr>
               );
             })

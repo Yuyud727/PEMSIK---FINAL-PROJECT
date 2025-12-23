@@ -146,13 +146,13 @@ const TableMahasiswa = ({
                       </Button>
                     )}
 
-                    {onEdit && user?.permission?.includes("mahasiswa.update") && (
+                    {onEdit && (
                       <Button size="sm" variant="warning" onClick={() => onEdit(mhs)}>
                         Edit
                       </Button>
                     )}
 
-                    {onDelete && user?.permission?.includes("mahasiswa.delete") && (
+                    {onDelete && (
                       <Button size="sm" variant="danger" onClick={() => onDelete(mhs.id)}>
                         Hapus
                       </Button>

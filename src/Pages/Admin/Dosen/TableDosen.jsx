@@ -107,25 +107,25 @@ const TableDosen = ({
                   <td className="py-2 px-4 text-center">
                     <span className="font-medium">{dsn.max_sks || "-"}</span>
                   </td>
-                  <td className="py-2 px-4 text-center space-x-2">
+                    <td className="py-2 px-4 text-center space-x-2">
                     {onDetail && (
-                      <Button size="sm" onClick={() => onDetail(dsn.id)}>
+                        <Button size="sm" onClick={() => onDetail(dsn.id)}>
                         Detail
-                      </Button>
+                        </Button>
                     )}
 
-                    {onEdit && user?.permission?.includes("dosen.update") && (
-                      <Button size="sm" variant="warning" onClick={() => onEdit(dsn)}>
+                    {onEdit && (
+                        <Button size="sm" variant="warning" onClick={() => onEdit(dsn)}>
                         Edit
-                      </Button>
+                        </Button>
                     )}
 
-                    {onDelete && user?.permission?.includes("dosen.delete") && (
-                      <Button size="sm" variant="danger" onClick={() => onDelete(dsn.id)}>
+                    {onDelete && (
+                        <Button size="sm" variant="danger" onClick={() => onDelete(dsn.id)}>
                         Hapus
-                      </Button>
+                        </Button>
                     )}
-                  </td>
+                    </td>
                 </tr>
               );
             })
