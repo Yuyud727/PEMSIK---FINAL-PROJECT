@@ -532,4 +532,4 @@ TableMahasiswa.jsx:
 ✅ Reusability - Modal bisa digunakan ulang lebih mudah
 ✅ Maintainability - Lebih mudah di-maintain dan debug
 ✅ Cleaner Code - Props lebih sedikit, kode lebih rapi
-✅ Better Encapsulation - Modal tidak expose internal logic ke parent
+✅ Better Encapsulation - Modal tidak expose internal logic ke parent# Trigger redeploy
