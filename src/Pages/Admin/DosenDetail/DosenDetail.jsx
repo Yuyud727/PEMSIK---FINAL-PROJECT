@@ -5,17 +5,17 @@ import Card from "@/Pages/Layouts/Components/Card";
 import Heading from "@/Pages/Layouts/Components/Heading";
 import Button from "@/Pages/Layouts/Components/Button";
 
-import { getMahasiswa } from "@/Utils/Apis/MahasiswaApi";
+import { getDosen } from "@/Utils/Apis/DosenApi";
 import { toastError } from "@/Utils/Helpers/ToastHelpers";
 
 import { useKelas } from "@/Utils/hooks/useKelas";
 import { useMataKuliah } from "@/Utils/hooks/useMataKuliah";
 
-const MahasiswaDetail = () => {
-  const { id } = useParams(); // Ubah dari nim ke id
+const DosenDetail = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const [mahasiswa, setMahasiswa] = useState(null);
+  const [dosen, setDosen] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Data untuk perhitungan SKS
@@ -23,39 +23,40 @@ const MahasiswaDetail = () => {
   const { data: mataKuliah = [] } = useMataKuliah();
 
   useEffect(() => {
-    fetchMahasiswa();
+    fetchDosen();
   }, [id]);
 
-  const fetchMahasiswa = async () => {
+  const fetchDosen = async () => {
     try {
-      const data = await getMahasiswa(id); // Supabase langsung return data
-      setMahasiswa(data);
+      const data = await getDosen(id); // Supabase langsung return data
+      setDosen(data);
     } catch (err) {
-      toastError("Gagal mengambil data mahasiswa");
-      setMahasiswa(null);
+      toastError("Gagal mengambil data dosen");
+      setDosen(null);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fungsi untuk menghitung total SKS yang diambil mahasiswa
-  const getTotalSks = (mhsId) => {
+  // Fungsi untuk menghitung total SKS yang diajarkan dosen
+  const getTotalSks = (dosenId) => {
     return kelas
-      .filter((k) => k.mahasiswa_id?.includes(mhsId))
+      .filter((k) => k.dosen_id === dosenId)
       .map((k) => mataKuliah.find((mk) => mk.id === k.mata_kuliah_id)?.sks || 0)
       .reduce((a, b) => a + b, 0);
   };
 
-  // Fungsi untuk mendapatkan daftar kelas yang diikuti
-  const getKelasEnrolled = (mhsId) => {
+  // Fungsi untuk mendapatkan daftar kelas yang diajar
+  const getKelasTeaching = (dosenId) => {
     return kelas
-      .filter((k) => k.mahasiswa_id?.includes(mhsId))
+      .filter((k) => k.dosen_id === dosenId)
       .map((k) => {
         const mk = mataKuliah.find((m) => m.id === k.mata_kuliah_id);
         return {
           ...k,
           mata_kuliah_nama: mk?.name || "-",
           mata_kuliah_sks: mk?.sks || 0,
+          jumlah_mahasiswa: k.mahasiswa_id?.length || 0,
         };
       });
   };
@@ -77,35 +78,36 @@ const MahasiswaDetail = () => {
   // =============================
   // DATA TIDAK ADA
   // =============================
-  if (!mahasiswa) {
+  if (!dosen) {
     return (
       <Card>
         <div className="text-center py-8">
           <p className="text-red-600 mb-4">Data tidak ditemukan</p>
-          <Button onClick={() => navigate("/admin/mahasiswa")}>
-            Kembali ke Daftar Mahasiswa
+          <Button onClick={() => navigate("/admin/dosen")}>
+            Kembali ke Daftar Dosen
           </Button>
         </div>
       </Card>
     );
   }
 
-  const totalSks = getTotalSks(mahasiswa.id);
-  const kelasEnrolled = getKelasEnrolled(mahasiswa.id);
-  const isOverLimit = totalSks > (mahasiswa.max_sks || 0);
+  const totalSks = getTotalSks(dosen.id);
+  const kelasTeaching = getKelasTeaching(dosen.id);
+  const isOverLimit = totalSks > (dosen.max_sks || 0);
+  const totalMahasiswa = kelasTeaching.reduce((a, b) => a + b.jumlah_mahasiswa, 0);
 
   // =============================
   // TAMPILAN DETAIL
   // =============================
   return (
     <div className="space-y-6">
-      {/* Card Info Mahasiswa */}
+      {/* Card Info Dosen */}
       <Card>
         <div className="flex justify-between items-center mb-4">
           <Heading as="h2" className="mb-0 text-left">
-            Detail Mahasiswa
+            Detail Dosen
           </Heading>
-          <Button variant="secondary" onClick={() => navigate("/admin/mahasiswa")}>
+          <Button variant="secondary" onClick={() => navigate("/admin/dosen")}>
             ← Kembali
           </Button>
         </div>
@@ -119,26 +121,12 @@ const MahasiswaDetail = () => {
             <table className="table-auto text-sm w-full">
               <tbody>
                 <tr>
-                  <td className="py-2 pr-4 font-medium text-gray-600 w-32">NIM</td>
-                  <td className="py-2 font-mono">{mahasiswa.nim}</td>
+                  <td className="py-2 pr-4 font-medium text-gray-600 w-32">ID</td>
+                  <td className="py-2 font-mono text-xs">{dosen.id}</td>
                 </tr>
                 <tr>
                   <td className="py-2 pr-4 font-medium text-gray-600">Nama</td>
-                  <td className="py-2">{mahasiswa.nama}</td>
-                </tr>
-                <tr>
-                  <td className="py-2 pr-4 font-medium text-gray-600">Status</td>
-                  <td className="py-2">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-semibold ${
-                        mahasiswa.status
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {mahasiswa.status ? "Aktif" : "Tidak Aktif"}
-                    </span>
-                  </td>
+                  <td className="py-2">{dosen.name}</td>
                 </tr>
               </tbody>
             </table>
@@ -147,13 +135,13 @@ const MahasiswaDetail = () => {
           {/* Info SKS */}
           <div className="space-y-4">
             <h3 className="font-semibold text-gray-700 border-b pb-2">
-              Informasi SKS
+              Informasi SKS Mengajar
             </h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-blue-50 rounded-lg p-4 text-center">
                 <p className="text-sm text-gray-600">Max SKS</p>
                 <p className="text-2xl font-bold text-blue-600">
-                  {mahasiswa.max_sks || 0}
+                  {dosen.max_sks || 0}
                 </p>
               </div>
               <div
@@ -177,29 +165,37 @@ const MahasiswaDetail = () => {
                 ⚠️ SKS melebihi batas maksimal!
               </p>
             )}
-            <div className="bg-gray-50 rounded-lg p-4 text-center">
-              <p className="text-sm text-gray-600">Sisa SKS</p>
-              <p
-                className={`text-2xl font-bold ${
-                  isOverLimit ? "text-red-600" : "text-gray-700"
-                }`}
-              >
-                {(mahasiswa.max_sks || 0) - totalSks}
-              </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-gray-600">Sisa SKS</p>
+                <p
+                  className={`text-2xl font-bold ${
+                    isOverLimit ? "text-red-600" : "text-gray-700"
+                  }`}
+                >
+                  {(dosen.max_sks || 0) - totalSks}
+                </p>
+              </div>
+              <div className="bg-purple-50 rounded-lg p-4 text-center">
+                <p className="text-sm text-gray-600">Total Mahasiswa</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {totalMahasiswa}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Card Daftar Kelas */}
+      {/* Card Daftar Kelas yang Diajar */}
       <Card>
         <Heading as="h3" className="mb-4 text-left">
-          Kelas yang Diikuti ({kelasEnrolled.length})
+          Kelas yang Diajar ({kelasTeaching.length})
         </Heading>
 
-        {kelasEnrolled.length === 0 ? (
+        {kelasTeaching.length === 0 ? (
           <p className="text-center text-gray-500 py-4">
-            Mahasiswa belum terdaftar di kelas manapun
+            Dosen belum mengajar kelas manapun
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -209,10 +205,11 @@ const MahasiswaDetail = () => {
                   <th className="py-2 px-4 text-left">No</th>
                   <th className="py-2 px-4 text-left">Mata Kuliah</th>
                   <th className="py-2 px-4 text-center">SKS</th>
+                  <th className="py-2 px-4 text-center">Jumlah Mahasiswa</th>
                 </tr>
               </thead>
               <tbody>
-                {kelasEnrolled.map((kls, index) => (
+                {kelasTeaching.map((kls, index) => (
                   <tr
                     key={kls.id}
                     className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
@@ -222,15 +219,21 @@ const MahasiswaDetail = () => {
                     <td className="py-2 px-4 text-center font-medium">
                       {kls.mata_kuliah_sks}
                     </td>
+                    <td className="py-2 px-4 text-center">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                        {kls.jumlah_mahasiswa} mahasiswa
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
               <tfoot className="bg-gray-200 font-semibold">
                 <tr>
                   <td colSpan="2" className="py-2 px-4 text-right">
-                    Total SKS:
+                    Total:
                   </td>
-                  <td className="py-2 px-4 text-center">{totalSks}</td>
+                  <td className="py-2 px-4 text-center">{totalSks} SKS</td>
+                  <td className="py-2 px-4 text-center">{totalMahasiswa} mahasiswa</td>
                 </tr>
               </tfoot>
             </table>
@@ -241,4 +244,4 @@ const MahasiswaDetail = () => {
   );
 };
 
-export default MahasiswaDetail;
+export default DosenDetail;

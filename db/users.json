@@ -1,0 +1,81 @@
+[
+  {
+    "id": "1",
+    "username": "admin",
+    "password": "admin123",
+    "role": "admin",
+    "permission": [
+      "dashboard.page",
+      "dosen.page",
+      "dosen.read",
+      "dosen.create",
+      "dosen.update",
+      "dosen.delete",
+      "mahasiswa.page",
+      "mahasiswa.read",
+      "mahasiswa.create",
+      "mahasiswa.update",
+      "mahasiswa.delete",
+      "mata-kuliah.page",
+      "mata-kuliah.read",
+      "mata-kuliah.create",
+      "mata-kuliah.update",
+      "mata-kuliah.delete",
+      "kelas.page",
+      "kelas.read",
+      "kelas.create",
+      "kelas.update",
+      "kelas.delete",
+      "rencana-studi.page",
+      "rencana-studi.read",
+      "rencana-studi.create",
+      "rencana-studi.update",
+      "rencana-studi.delete",
+      "user.page",
+      "user.read",
+      "user.create",
+      "user.update",
+      "user.delete"
+    ]
+  },
+  {
+    "id": "2",
+    "username": "operator",
+    "password": "operator123",
+    "role": "operator",
+    "permission": [
+      "dashboard.page",
+      "dosen.page",
+      "dosen.read",
+      "mahasiswa.page",
+      "mahasiswa.read",
+      "mata-kuliah.page",
+      "mata-kuliah.read",
+      "kelas.page",
+      "kelas.read",
+      "rencana-studi.page",
+      "rencana-studi.read",
+      "rencana-studi.create",
+      "rencana-studi.update"
+    ]
+  },
+  {
+    "id": "3",
+    "username": "viewer",
+    "password": "viewer123",
+    "role": "viewer",
+    "permission": [
+      "dashboard.page",
+      "dosen.page",
+      "dosen.read",
+      "mahasiswa.page",
+      "mahasiswa.read",
+      "mata-kuliah.page",
+      "mata-kuliah.read",
+      "kelas.page",
+      "kelas.read",
+      "rencana-studi.page",
+      "rencana-studi.read"
+    ]
+  }
+]

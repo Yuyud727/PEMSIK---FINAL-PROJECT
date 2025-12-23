@@ -1,7 +1,5 @@
-import Mahasiswa from "@/Pages/Admin/Mahasiswa";
-
 const App = () => {
-  return <Mahasiswa />;
+  return null;
 };
 
 export default App;

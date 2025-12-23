@@ -1,10 +1,11 @@
+import { Navigate } from "react-router-dom";
+import { useAuthStateContext } from "@contexts/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, loading } = useAuthStateContext();
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (loading) return null; // cegah flicker
+  if (!user) return <Navigate to="/" replace />;
 
   return children;
 };
